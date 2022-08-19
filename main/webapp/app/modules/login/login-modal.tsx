@@ -4,7 +4,7 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Alert, Row, Col, Fo
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 
-// Login(login.tsx) 컴포넌트로부터 LoginModal이 넘겨 받은 값(props) 설정에 대한 인터페이스
+// LOGIN 17. Login(login.tsx) 컴포넌트로부터 LoginModal이 넘겨 받은 값(props) 설정에 대한 인터페이스
 export interface ILoginModalProps {
   showModal: boolean;
   loginError: boolean;
@@ -13,34 +13,36 @@ export interface ILoginModalProps {
 }
 
 const LoginModal = (props: ILoginModalProps) => {
-  // Login에서 받은 값으로 로그인 함수 정의
+  // LOGIN 18. Login에서 받은 값으로 로그인 함수 정의
   const login = ({ username, password, rememberMe }) => {
     props.handleLogin(username, password, rememberMe);
   };
 
-  // useForm hook 사용
+  // LOGIN 19. useForm hook 사용
   const {
     /**
      * handleSubmit은 e.preventDefault()를 가지고 있음
      * register는 input 값 관리에 용이하고 Validation check를 해줌
      * onTouched 실행 때 실행됨
+     * form 전송을 위해?
      */
     handleSubmit,
     register,
     formState: { errors, touchedFields },
   } = useForm({ mode: 'onTouched' });
 
-  // 로그인 에러 상태와 로그인 취소 함수를 props로 초기화
+  // LOGIN 20. 로그인 에러 상태와 로그인 취소 함수를 props로 초기화
   const { loginError, handleClose } = props;
 
-  // submit 할 때 로그인 함수 실행
+  // LOGIN 21. submit 함수 정의
+  // LOGIN 24. submit 할 때 로그인 함수 실행
   const handleLoginSubmit = e => {
     handleSubmit(login)(e);
   };
 
   return (
     <Modal isOpen={props.showModal} toggle={handleClose} backdrop="static" id="login-page" autoFocus={false}>
-      {/* submit 함수 설정 */}
+      {/* LOGIN 22. submit 함수 설정 */}
       <Form onSubmit={handleLoginSubmit}>
         <ModalHeader id="login-title" data-cy="loginTitle" toggle={handleClose}>
           인증
@@ -48,7 +50,7 @@ const LoginModal = (props: ILoginModalProps) => {
         <ModalBody>
           <Row>
             <Col md="12">
-              {/* 로그인 에러 상태에 따라 표시 */}
+              {/* LOGIN 23. 로그인 에러 상태에 따라 표시 */}
               {loginError ? (
                 <Alert color="danger" data-cy="loginError">
                   <strong>인증 실패!</strong> credential을 확인하고 다시 시도해 주세요.

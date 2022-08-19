@@ -19,7 +19,7 @@ const accountMenuItemsAuthenticated = () => (
 
 const accountMenuItems = () => (
   <>
-    {/* login.tsx 호출 */}
+    {/* LOGIN 6. login.tsx 호출(routes.tsx에 의해) */}
     <MenuItem id="login-item" icon="sign-in-alt" to="/login" data-cy="login">
       인증
     </MenuItem>
@@ -32,7 +32,7 @@ const accountMenuItems = () => (
 
 export const AccountMenu = ({ isAuthenticated = false }) => (
   <NavDropdown icon="user" name="계정" id="account-menu" data-cy="accountMenu">
-    {/* header.tsx에서 넘겨 받은 유저의 권한 여부(isAuthenticated)에 따라 메소드 실행 */}
+    {/* LOGIN 5. header.tsx에서 넘겨 받은 유저의 권한 여부(isAuthenticated)에 따라 메소드 실행 */}
     {isAuthenticated ? accountMenuItemsAuthenticated() : accountMenuItems()}
   </NavDropdown>
 );

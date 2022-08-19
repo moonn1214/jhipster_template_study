@@ -14,7 +14,7 @@ import passwordReset from 'app/modules/account/password-reset/password-reset.red
 import entitiesReducers from 'app/entities/reducers';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
-// 여기에서 authentication 액션이 실행되는 듯
+// LOGIN 45. 여기에서 authentication 액션이 실행되는 듯
 const rootReducer: ReducersMapObject = {
   authentication,
   applicationProfile,

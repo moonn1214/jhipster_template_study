@@ -97,14 +97,14 @@ public class AccountResource {
      * @return the current user.
      * @throws RuntimeException {@code 500 (Internal Server Error)} if the user couldn't be returned.
      */
-    // authentication.ts에서 JWT 토큰, httpheaders, 상태 코드를 응답으로 받고 요청을 보냄
+    // LOGIN 42. authentication.ts에서 JWT 토큰, httpheaders, 상태 코드를 응답으로 받고 요청을 보냄
     @GetMapping("/account")
     public AdminUserDTO getAccount() {
         return userService
-            // UserService의 getUserWithAuthorities 메소드 호출
+            // LOGIN 43. UserService의 getUserWithAuthorities 메소드 호출
             // 현재 로그인 정보 가져옴
             .getUserWithAuthorities()
-            // 가져온 정보로 AdminUserDTO 생성 후 반환
+            // LOGIN 44. 가져온 정보로 AdminUserDTO 생성 후 반환
             .map(AdminUserDTO::new)
             // orElseThrow 에러 처리
             .orElseThrow(() -> new AccountResourceException("User could not be found"));

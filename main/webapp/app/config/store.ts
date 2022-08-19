@@ -23,7 +23,7 @@ const getStore = () => store;
 export type IRootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
-// store를 가져오는 메소드(리덕스의 상태값을 조회)
+// LOGIN 2. store를 가져오는 메소드(리덕스의 상태값을 조회)
 export const useAppSelector: TypedUseSelectorHook<IRootState> = useSelector;
 // dispatch를 보내는 메소드, store.dispatch 타입으로
 export const useAppDispatch = () => useDispatch<AppDispatch>();

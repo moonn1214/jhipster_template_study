@@ -44,7 +44,7 @@ const Header = (props: IHeaderProps) => {
             {props.isAuthenticated && props.isAdmin && (
               <AdminMenu showOpenAPI={props.isOpenAPIEnabled} showDatabase={!props.isInProduction} />
             )}
-            {/* app.tsx에서 값을 설정함 */}
+            {/* LOGIN 4. app.tsx에서 값을 설정함 */}
             {/* isAuthenticated True 또는 False로 값 설정 후 넘겨줌 => account.tsx */}
             <AccountMenu isAuthenticated={props.isAuthenticated} />
           </Nav>

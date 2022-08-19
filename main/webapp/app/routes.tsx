@@ -32,6 +32,7 @@ const AppRoutes = () => {
     <div className="view-routes">
       <ErrorBoundaryRoutes>
         <Route index element={<Home />} />
+        {/* LOGIN 7. /login 경로는 Login 컴포넌트 사용 */}
         <Route path="login" element={<Login />} />
         <Route path="logout" element={<Logout />} />
         <Route path="account">

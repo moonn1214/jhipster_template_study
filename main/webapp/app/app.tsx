@@ -27,8 +27,8 @@ export const App = () => {
     dispatch(getProfile());
   }, []);
 
-  // header.tsx에서 사용할 값을 설정
-  // store.tsx에서 useAppSelector로 값을 조회
+  // LOGIN 1. header.tsx에서 사용할 값을 설정
+  // store.ts에서 useAppSelector로 값을 조회
   const isAuthenticated = useAppSelector(state => state.authentication.isAuthenticated);
   const isAdmin = useAppSelector(state => hasAnyAuthority(state.authentication.account.authorities, [AUTHORITIES.ADMIN]));
   const ribbonEnv = useAppSelector(state => state.applicationProfile.ribbonEnv);
@@ -41,7 +41,7 @@ export const App = () => {
       <div className="app-container" style={{ paddingTop }}>
         <ToastContainer position={toast.POSITION.TOP_LEFT} className="toastify-container" toastClassName="toastify-toast" />
         <ErrorBoundary>
-          {/* header.tsx에서 사용할 값을 설정 */}
+          {/* LOGIN 3. header.tsx에서 사용할 값을 설정 */}
           <Header
             isAuthenticated={isAuthenticated}
             isAdmin={isAdmin}
