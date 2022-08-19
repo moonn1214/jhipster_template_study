@@ -23,11 +23,12 @@ const getStore = () => store;
 export type IRootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
-// store를 가져오는 메소드
+// store를 가져오는 메소드(리덕스의 상태값을 조회)
 export const useAppSelector: TypedUseSelectorHook<IRootState> = useSelector;
 // dispatch를 보내는 메소드, store.dispatch 타입으로
 export const useAppDispatch = () => useDispatch<AppDispatch>();
 // thunkaction은 커링패턴 -> 함수의 인자로 함수를 전달하고, 그 함수로 새로운 함수를 만드는 기법
+// store의 상태트리에 접근하여 상태값들 조회
 export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, IRootState, unknown, AnyAction>;
 
 export default getStore;

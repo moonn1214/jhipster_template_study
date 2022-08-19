@@ -6,7 +6,7 @@ import { login } from 'app/shared/reducers/authentication';
 import LoginModal from './login-modal';
 
 export const Login = () => {
-  // dispatch를 보내는 메소드
+  // dispatch를 보내는 메소드 (메소드를 호출한다.)
   const dispatch = useAppDispatch();
   // store를 가져와서 state 값을 변경
   const isAuthenticated = useAppSelector(state => state.authentication.isAuthenticated);
@@ -22,7 +22,7 @@ export const Login = () => {
     setShowModal(true);
   }, []);
 
-  // 로그인 함수, 아이디 패스워드 자동로그인 값을 dispatch로 보냄(authentication.ts -> login 메소드의 파라미터로 담아서)
+  // 로그인 함수, 아이디 패스워드 자동로그인 값을 dispatch로 보냄(authentication.ts -> login 메소드의 파라미터로 담아서 메소드를 호출)
   const handleLogin = (username, password, rememberMe = false) => dispatch(login(username, password, rememberMe));
 
   // 로그인 취소 함수, 모달을 닫고 루트 페이지(home.tsx)로 이동(routes.tsx를 통해 index를 home.tsx로 설정함)

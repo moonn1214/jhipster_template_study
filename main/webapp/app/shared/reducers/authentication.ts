@@ -24,10 +24,13 @@ export type AuthenticationState = Readonly<typeof initialState>;
 
 // Actions
 
+// getAccount 메소드 호출 (현재 값 상태를 받아서 사용)
+// ?????? 응답 후 state를 어디서 변경하는지 (AccountResource.java에서 getmapping으로 뷰를 반환하지도 않고) 아래 AuthenticationSlice?
 export const getSession = (): AppThunk => (dispatch, getState) => {
   dispatch(getAccount());
 };
 
+// axios(http 비동기 통신 라이브러리) 방식으로 get 방식, 'api/account'를 요청으로 보냄 (AccountResource.java)
 export const getAccount = createAsyncThunk('authentication/get_account', async () => axios.get<any>('api/account'), {
   serializeError: serializeAxiosError,
 });
@@ -48,21 +51,29 @@ export const authenticate = createAsyncThunk(
 );
 
 // 로그인 메소드
-// 여기부터
+// login.tsx 에서 넘겨받은 값을 사용
 export const login: (username: string, password: string, rememberMe?: boolean) => AppThunk =
   (username, password, rememberMe = false) =>
   async dispatch => {
+    // authenticate(axios 요청) 메소드를 호출 후 응답을 result에 초기화
     const result = await dispatch(authenticate({ username, password, rememberMe }));
+    // result의 payload를 AxiosResponse 타입으로 다운캐스팅
     const response = result.payload as AxiosResponse;
+    // ?. => 옵셔널 체이닝 연산자, 프로퍼티가 없는(undefined, null) 객체를 에러 없이 안전하게 접근 가능(예외 처리)
+    // "authorization":"Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqa21vb24iLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjYwOTY3NDk2fQ.1F00EW9aM8rHGX_f4nmQj3SoDZtEb8VqtxGxhKv1xRtrjGtTza7SbVhXwBDTWXCmcPoXw11cLZvTBaNnr7Mqdw"
     const bearerToken = response?.headers?.authorization;
+    // 유효한 권한인지 확인
     if (bearerToken && bearerToken.slice(0, 7) === 'Bearer ') {
       const jwt = bearerToken.slice(7, bearerToken.length);
+      // 자동 로그인이 표시되어 있으면 로컬 스토리지에 AUTH_TOKEN_KEY로 authorization을 저장
       if (rememberMe) {
         Storage.local.set(AUTH_TOKEN_KEY, jwt);
       } else {
+        // 표시되어 있지 않으면 세션 스토리지에 저장
         Storage.session.set(AUTH_TOKEN_KEY, jwt);
       }
     }
+    // getSession 메소드 호출
     dispatch(getSession());
   };
 
@@ -86,6 +97,7 @@ export const clearAuthentication = messageKey => dispatch => {
   dispatch(clearAuth());
 };
 
+// index.ts에 의해 해당 액션 실행
 export const AuthenticationSlice = createSlice({
   name: 'authentication',
   initialState: initialState as AuthenticationState,
@@ -112,6 +124,7 @@ export const AuthenticationSlice = createSlice({
       };
     },
   },
+  // get방식 요청의 응답으로 state가 설정됨
   extraReducers(builder) {
     builder
       .addCase(authenticate.rejected, (state, action) => ({
