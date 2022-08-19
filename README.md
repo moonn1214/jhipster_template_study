@@ -1,0 +1,2 @@
+# jhipster_template_study
+jyemr_template_study
