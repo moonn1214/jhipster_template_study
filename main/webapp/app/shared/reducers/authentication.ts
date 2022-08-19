@@ -48,7 +48,7 @@ export const authenticate = createAsyncThunk(
 );
 
 // 로그인 메소드
-// 여기
+// 여기부터
 export const login: (username: string, password: string, rememberMe?: boolean) => AppThunk =
   (username, password, rememberMe = false) =>
   async dispatch => {
