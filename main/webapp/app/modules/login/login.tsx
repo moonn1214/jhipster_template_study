@@ -8,7 +8,7 @@ import LoginModal from './login-modal';
 export const Login = () => {
   // LOGIN 8. dispatch를 보내는 메소드 (dispatch = 메소드를 호출한다.)
   const dispatch = useAppDispatch();
-  // LOGIN 9. store를 가져와서 state 값을 변경
+  // LOGIN 9. store를 가져와서 state 값을 읽음
   const isAuthenticated = useAppSelector(state => state.authentication.isAuthenticated);
   const loginError = useAppSelector(state => state.authentication.loginError);
   const showModalLogin = useAppSelector(state => state.authentication.showModalLogin);

@@ -34,6 +34,7 @@ const AppRoutes = () => {
         <Route index element={<Home />} />
         {/* LOGIN 7. /login 경로는 Login 컴포넌트 사용 */}
         <Route path="login" element={<Login />} />
+        {/* LOGOUT 2. /logout 경로는 Logout 컴포넌트 사용 */}
         <Route path="logout" element={<Logout />} />
         <Route path="account">
           <Route

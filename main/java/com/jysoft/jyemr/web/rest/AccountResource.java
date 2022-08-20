@@ -105,6 +105,7 @@ public class AccountResource {
             // 현재 로그인 정보 가져옴
             .getUserWithAuthorities()
             // LOGIN 44. 가져온 정보로 AdminUserDTO 생성 후 반환
+            // authorities = [ROLE_USER, ROLE_ADMIN] 이면 admin
             .map(AdminUserDTO::new)
             // orElseThrow 에러 처리
             .orElseThrow(() -> new AccountResourceException("User could not be found"));

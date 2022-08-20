@@ -79,6 +79,7 @@ export const login: (username: string, password: string, rememberMe?: boolean) =
   };
 
 export const clearAuthToken = () => {
+  // LOGOUT 8. 로컬스토리지 또는 세션스토리지에 저장된 토큰을 삭제
   if (Storage.local.get(AUTH_TOKEN_KEY)) {
     Storage.local.remove(AUTH_TOKEN_KEY);
   }
@@ -87,8 +88,11 @@ export const clearAuthToken = () => {
   }
 };
 
+// LOGOUT 6. logout 메소드 실행
 export const logout: () => AppThunk = () => dispatch => {
+  // LOGOUT 7. clearAuthToken 메소드 실행
   clearAuthToken();
+  // LOGOUT 9. logoutSession 메소드 호출
   dispatch(logoutSession());
 };
 
@@ -105,6 +109,7 @@ export const AuthenticationSlice = createSlice({
   reducers: {
     logoutSession() {
       return {
+        // LOGOUT 10. state를 초기 값으로 세팅, showModalLogin은 true로 리턴(초기세팅은 false)
         ...initialState,
         showModalLogin: true,
       };

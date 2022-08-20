@@ -11,6 +11,7 @@ const accountMenuItemsAuthenticated = () => (
     <MenuItem icon="lock" to="/account/password" data-cy="passwordItem">
       비밀번호
     </MenuItem>
+    {/* LOGOUT 1. logout.tsx 호출(routes.tsx에 의해) */}
     <MenuItem icon="sign-out-alt" to="/logout" data-cy="logout">
       로그아웃
     </MenuItem>
