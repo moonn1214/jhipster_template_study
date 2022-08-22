@@ -77,7 +77,7 @@ export const RegisterPage = () => {
                 required: { value: true, message: '이메일 입력이 필요합니다.' },
                 minLength: { value: 5, message: '이메일은 최소 5자 이상이어야 합니다' },
                 maxLength: { value: 254, message: '이메일은 최대 50자 까지입니다.' },
-                // REGISTER 10. 이메일 유효성 검사(존재 여부 확인), false이면 오른쪽
+                // REGISTER 10. 이메일 유효성 검사(이메일 형식이 맞는지), false이면 오른쪽
                 validate: v => isEmail(v) || '잘못된 이메일입니다.',
               }}
               data-cy="email"

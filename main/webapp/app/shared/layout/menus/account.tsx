@@ -5,6 +5,7 @@ import { NavDropdown } from './menu-components';
 
 const accountMenuItemsAuthenticated = () => (
   <>
+    {/* SETTINGS 1. settings.tsx 호출(app/modules/account.index.tsx에 의해) */}
     <MenuItem icon="wrench" to="/account/settings" data-cy="settings">
       설정
     </MenuItem>

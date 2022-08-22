@@ -24,7 +24,7 @@ export type AuthenticationState = Readonly<typeof initialState>;
 
 // Actions
 
-// LOGIN 40. getAccount 메소드 호출 (현재 값 상태를 받아서 사용)
+// LOGIN 40. getAccount 메소드 호출
 // ?????? 응답 후 state를 어디서 변경하는지 (AccountResource.java에서 getmapping으로 뷰를 반환하지도 않고) 아래 AuthenticationSlice?
 export const getSession = (): AppThunk => (dispatch, getState) => {
   dispatch(getAccount());

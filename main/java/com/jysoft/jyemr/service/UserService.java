@@ -218,35 +218,53 @@ public class UserService {
      * @param userDTO user to update.
      * @return updated user.
      */
+    // SETTINGS 26. 파라미터로 넘어온 값들을 userDTO 객체로 받아서 실행
     public Optional<AdminUserDTO> updateUser(AdminUserDTO userDTO) {
         return Optional
+            // userDTO의 아이디로 유저 정보를 찾음
             .of(userRepository.findById(userDTO.getId()))
+            // 존재하는지 확인
             .filter(Optional::isPresent)
+            // 존재하면 가져옴
             .map(Optional::get)
             .map(user -> {
+                // user의 캐시 삭제
                 this.clearUserCaches(user);
+                // user의 아이디, firstname, lastname 설정
                 user.setLogin(userDTO.getLogin().toLowerCase());
                 user.setFirstName(userDTO.getFirstName());
                 user.setLastName(userDTO.getLastName());
+                // user의 이메일이 없으면
                 if (userDTO.getEmail() != null) {
+                    // 이메일 설정
                     user.setEmail(userDTO.getEmail().toLowerCase());
                 }
+                // imageurl, 활성화상태, langkey 설정
                 user.setImageUrl(userDTO.getImageUrl());
                 user.setActivated(userDTO.isActivated());
                 user.setLangKey(userDTO.getLangKey());
+                // 권한 정보를 담기 위한 객체 선언 후 user의 권한을 가져와서 할당
                 Set<Authority> managedAuthorities = user.getAuthorities();
+                // managedAuthorities의 모든 요소 삭제
                 managedAuthorities.clear();
                 userDTO
+                    // 넘어온 유저 객체의 권한 정보를 가져옴
                     .getAuthorities()
+                    // 권한 정보들 중
                     .stream()
+                    // 넘어온 유저 객체로 authorityRepository에서 권한을 조회하고 
                     .map(authorityRepository::findById)
+                    // null이 아닌지 확인
                     .filter(Optional::isPresent)
+                    // 가져와서 managedAuthorities에 추가
                     .map(Optional::get)
                     .forEach(managedAuthorities::add);
+                // user의 캐시 삭제 후 user를 리턴
                 this.clearUserCaches(user);
                 log.debug("Changed Information for User: {}", user);
                 return user;
             })
+            // user를 AdminUserDTO 타입으로 변환해줌
             .map(AdminUserDTO::new);
     }
 

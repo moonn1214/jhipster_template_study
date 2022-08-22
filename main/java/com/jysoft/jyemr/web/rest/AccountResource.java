@@ -104,7 +104,7 @@ public class AccountResource {
      * @return the current user.
      * @throws RuntimeException {@code 500 (Internal Server Error)} if the user couldn't be returned.
      */
-    // LOGIN 42. authentication.ts에서 JWT 토큰, httpheaders, 상태 코드를 응답으로 받고 요청을 보냄
+    // LOGIN 42. (JWT 토큰, httpheaders, 상태 코드를 응답으로 받은)authentication.ts에서 요청을 보냄
     @GetMapping("/account")
     public AdminUserDTO getAccount() {
         return userService
@@ -125,19 +125,30 @@ public class AccountResource {
      * @throws EmailAlreadyUsedException {@code 400 (Bad Request)} if the email is already used.
      * @throws RuntimeException {@code 500 (Internal Server Error)} if the user login wasn't found.
      */
+    // SETTINGS 18. settings.reducer.ts에서 post 방식으로 요청을 보냈음
     @PostMapping("/account")
+    // SETTINGS 19. 요청으로 넘어온 계정 정보 account를 RequestBody에 의해 AdminUserDTO 타입의 객체 userDTO에 넣음, Valid에 의해 검증
     public void saveAccount(@Valid @RequestBody AdminUserDTO userDTO) {
+        // SETTINGS 20. 현재 로그인한 유저의 아이디를 userLogin 변수에 할당
         String userLogin = SecurityUtils
             .getCurrentUserLogin()
+            // orElseThrow 에러 처리
             .orElseThrow(() -> new AccountResourceException("Current user login not found"));
+        // SETTINGS 21. 넘어온 계정 정보의 이메일로 userRepository에서 유저 정보를 찾아서 existingUser에 넣음 
         Optional<User> existingUser = userRepository.findOneByEmailIgnoreCase(userDTO.getEmail());
+        // SETTINGS 22. 넘어온 계정 정보의 이메일로 찾은 유저가 존재하고
+        // 넘어온 계정 정보의 이메일로 찾은 유저의 아이디와 현재 로그인한 유저의 아이디를 비교한 값 => ! result
+        // && => true 이면 서로 다른 것 => 아래 예외 처리 후 종료
         if (existingUser.isPresent() && (!existingUser.get().getLogin().equalsIgnoreCase(userLogin))) {
             throw new EmailAlreadyUsedException();
         }
+        // SETTINGS 23. false이면 현재 로그인한 유저의 아이디로 userRepository에서 유저 정보를 가져와 user에 할당
         Optional<User> user = userRepository.findOneByLogin(userLogin);
+        // SETTINGS 24. 유저가 존재하지 않으면 예외 처리 후 종료
         if (!user.isPresent()) {
             throw new AccountResourceException("User could not be found");
         }
+        // SETTINGS 25. UserService의 updateUser 메소드 실행 (UserService.java)
         userService.updateUser(
             userDTO.getFirstName(),
             userDTO.getLastName(),

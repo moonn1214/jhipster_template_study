@@ -16,6 +16,7 @@ import entitiesReducers from 'app/entities/reducers';
 
 // LOGIN 45. 여기에서 authentication 액션이 실행되는 듯
 // REGISTER 70. register 액션 실행 예상
+// SETTINGS 27. settings 액션 실행 예상
 const rootReducer: ReducersMapObject = {
   authentication,
   applicationProfile,
