@@ -289,16 +289,22 @@ public class UserService {
      */
     public void updateUser(String firstName, String lastName, String email, String langKey, String imageUrl) {
         SecurityUtils
+            // MANAGEMENT 45. 현재 유저의 로그인 아이디를 가져옴
             .getCurrentUserLogin()
+            // 가져온 로그인 아이디로 userRepository에서 로그인 정보를 찾음
             .flatMap(userRepository::findOneByLogin)
+            // 존재하면 찾은 유저의 firstname, lastname을 파라미터로 넘어온 값으로 설정
             .ifPresent(user -> {
                 user.setFirstName(firstName);
                 user.setLastName(lastName);
+                // 파라미터의 이메일이 null이 아니면 유저의 이메일로 설정
                 if (email != null) {
                     user.setEmail(email.toLowerCase());
                 }
+                // 설정
                 user.setLangKey(langKey);
                 user.setImageUrl(imageUrl);
+                // 캐시 삭제
                 this.clearUserCaches(user);
                 log.debug("Changed Information for User: {}", user);
             });
@@ -335,6 +341,8 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public Page<AdminUserDTO> getAllManagedUsers(Pageable pageable) {
+        // MANAGEMENT 19. pageable => Page request [number: 0, size 20, sort: id: ASC]
+        // UserRepository에서 파라미터로 유저를 찾아 AdminUserDTO 객체를 생성하여 담고 리턴
         return userRepository.findAll(pageable).map(AdminUserDTO::new);
     }
 

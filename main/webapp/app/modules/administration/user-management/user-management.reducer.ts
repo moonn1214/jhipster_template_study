@@ -28,7 +28,24 @@ export const getUsers = createAsyncThunk('userManagement/fetch_users', async ({ 
 // MANAGEMENT 13. 현재페이지-1, 페이지당 항목 수, 정렬 기준과 방식을 넘겨받음
 export const getUsersAsAdmin = createAsyncThunk('userManagement/fetch_users_as_admin', async ({ page, size, sort }: IQueryParams) => {
   const requestUrl = `${adminUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
-  // axios get방식으로 요청함, 요청 url : api/admin/users?page=값&size=값&sort=값 또는 api/admin/users (UserResource.java)
+  // axios get방식으로 요청함, 요청 url : api/admin/users?page=값&size=값&sort=값 또는 api/admin/users (UserResource.java), page/size/sort를 파라미터로 넘김
+  // MANAGEMENT 23. get 방식 요청 응답이 반환됨
+  /* new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK) : 
+    <200 OK OK,[AdminUserDTO{
+                  login='admin', 
+                  firstName='Administrator', 
+                  lastName='Administrator', 
+                  email='admin@localhost', 
+                  imageUrl='', 
+                  activated=true, 
+                  langKey='ko', 
+                  createdBy=system, 
+                  createdDate=null, 
+                  lastModifiedBy='system', 
+                  lastModifiedDate=null, 
+                  authorities=[ROLE_USER, ROLE_ADMIN]}, 
+                ],[X-Total-Count:"2", Link:"<http://localhost:8080/api/admin/users?sort=id%2Casc&page=0&size=20>; 
+                  rel="last",<http://localhost:8080/api/admin/users?sort=id%2Casc&page=0&size=20>; rel="first""]> */
   return axios.get<IUser[]>(requestUrl);
 });
 
@@ -57,7 +74,10 @@ export const createUser = createAsyncThunk(
 
 export const updateUser = createAsyncThunk(
   'userManagement/update_user',
+  // MANAGEMENT 37. user 정보와 상태 정보로 실행
   async (user: IUser, thunkAPI) => {
+    // MANAGEMENT 38. axios 통신 put 메소드로 요청을 보냄, 요청 url : api/admin/users, user 정보를 파라미터로 넘김(UserResource.java)
+    // MANAGEMENT 46. 응답을 result에 할당
     const result = await axios.put<IUser>(adminUrl, user);
     thunkAPI.dispatch(getUsersAsAdmin({}));
     return result;

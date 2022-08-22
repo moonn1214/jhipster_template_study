@@ -37,23 +37,33 @@ export const UserManagement = () => {
         sort: `${pagination.sort},${pagination.order}`,
       })
     );
+    // MANAGEMENT 24. endURL 설정, 현재 값 사용
     const endURL = `?page=${pagination.activePage}&sort=${pagination.sort},${pagination.order}`;
+    // MANAGEMENT 25. pathname의 쿼리 문자열이 endURL과 다르다면
     if (location.search !== endURL) {
+      // MANAGEMENT 26. endURL로 이동
       navigate(`${location.pathname}${endURL}`);
     }
   };
 
-  // MANAGEMENT 11. activePage, order, sort가 변결될 때 getUsersFromProps 실행
+  // MANAGEMENT 11. activePage, order, sort가 변경될 때 getUsersFromProps 실행
   useEffect(() => {
     getUsersFromProps();
   }, [pagination.activePage, pagination.order, pagination.sort]);
 
+  // MANAGEMENT 27. location.search가 변경될 때 실행
   useEffect(() => {
+    // MANAGEMENT 28. URLSearchParams => url에서 쿼리 파라미터를 가져오거나 수정할 때 사용
+    // location.search(쿼리 파라미터)로 URLSeachParams 생성
     const params = new URLSearchParams(location.search);
+    // MANAGEMENT 29. 쿼리 파라미터에서 page와 sort 가져옴
     const page = params.get('page');
     const sortParam = params.get(SORT);
+    // MANAGEMENT 30. 둘 다 존재하면
     if (page && sortParam) {
+      // sort 문자열을 나눔
       const sortSplit = sortParam.split(',');
+      // 페이지 상태를 변경함
       setPagination({
         ...pagination,
         activePage: +page,
@@ -80,6 +90,7 @@ export const UserManagement = () => {
     getUsersFromProps();
   };
 
+  // MANAGEMENT 36. 활성/비활성 상태 변경 메소드, user-management.reducer.tsx의 updateUser 액션 호출(user 정보와 현재 유저의 활성 상태 반대 상태를 파라미터)
   const toggleActive = user => () => {
     dispatch(
       updateUser({
@@ -89,6 +100,7 @@ export const UserManagement = () => {
     );
   };
 
+  // MANAGEMENT 31. store에서 계정 정보, 유저, 모든 항목, 로딩을 가져옴
   const account = useAppSelector(state => state.authentication.account);
   const users = useAppSelector(state => state.userManagement.users);
   const totalItems = useAppSelector(state => state.userManagement.totalItems);
@@ -99,15 +111,18 @@ export const UserManagement = () => {
       <h2 id="user-management-page-heading" data-cy="userManagementPageHeading">
         사용자
         <div className="d-flex justify-content-end">
+          {/* MANAGEMENT 32. 새로고침 시 handleSyncList 메소드 실행(getUsersFromProps 메소드임) */}
           <Button className="me-2" color="info" onClick={handleSyncList} disabled={loading}>
             <FontAwesomeIcon icon="sync" spin={loading} /> Refresh list
           </Button>
+          {/* MANAGEMENT 33. MANAGEMENT-UPDATE 1. 생성을 선택하면 /new 링크로 이동 (user-management/index.tsx에서 지정) */}
           <Link to="new" className="btn btn-primary jh-create-entity">
             <FontAwesomeIcon icon="plus" /> 사용자 생성
           </Link>
         </div>
       </h2>
       <Table responsive striped>
+        {/* MANAGEMENT 34. 테이블 속성 생성, onClick 메소드는 각 속성으로 정렬 */}
         <thead>
           <tr>
             <th className="hand" onClick={sort('id')}>
@@ -139,16 +154,22 @@ export const UserManagement = () => {
             <th />
           </tr>
         </thead>
+        {/* MANAGEMENT 35. 테이블 바디 생성 */}
         <tbody>
           {users.map((user, i) => (
+            // id 는 유저의 아이디
             <tr id={user.login} key={`user-${i}`}>
               <td>
+                {/* MANAGEMENT-DETAIL 1. user.id(number) 클릭 시 유저의 아이디 링크로 이동(user-management/index.tsx에서 지정) */}
                 <Button tag={Link} to={user.login} color="link" size="sm">
                   {user.id}
                 </Button>
               </td>
+              {/* 유저 아이디 */}
               <td>{user.login}</td>
+              {/* 유저 이메일 */}
               <td>{user.email}</td>
+              {/* 유저가 활성화 상태면 활성, 비활성화 상태면 비활성화, onClick 메소드는 toggleActive */}
               <td>
                 {user.activated ? (
                   <Button color="success" onClick={toggleActive(user)}>

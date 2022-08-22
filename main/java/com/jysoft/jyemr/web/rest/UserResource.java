@@ -138,19 +138,31 @@ public class UserResource {
      * @throws LoginAlreadyUsedException {@code 400 (Bad Request)} if the login is already in use.
      */
     @PutMapping("/users")
+    // MANAGEMENT 39. 권한이 admin일 때만 실행
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
+    // MANAGEMENT 40. 요청 파라미터로 넘어온 user 정보를 AdminUserDTO 타입으로 변환하여 생성 및 검증
     public ResponseEntity<AdminUserDTO> updateUser(@Valid @RequestBody AdminUserDTO userDTO) {
         log.debug("REST request to update User : {}", userDTO);
+        // MANAGEMENT 41. 유저의 이메일로 유저의 로그인 아이디를 찾음
         Optional<User> existingUser = userRepository.findOneByEmailIgnoreCase(userDTO.getEmail());
+        // MANAGEMENT 42. 찾은 유저의 로그인 아이디가 존재하고
+        //                찾은 유저의 아이디와 넘어온 유저의 아이디가 동일하지 않으면
+        //                예외 처리하고 종료
         if (existingUser.isPresent() && (!existingUser.get().getId().equals(userDTO.getId()))) {
             throw new EmailAlreadyUsedException();
         }
+        // MANAGEMENT 43. 넘어온 유저의 로그인 아이디(소문자변환)로 유저의 로그인 아이디를 찾음, 위와 같이 처리
         existingUser = userRepository.findOneByLogin(userDTO.getLogin().toLowerCase());
         if (existingUser.isPresent() && (!existingUser.get().getId().equals(userDTO.getId()))) {
             throw new LoginAlreadyUsedException();
         }
+        // MANAGEMENT 44. 넘어온 유저의 정보를 파라미터로 UserService의 updateUser메소드 실행
+        // 새로 설정한 유저 정보를 updatedUser에 할당
         Optional<AdminUserDTO> updatedUser = userService.updateUser(userDTO);
 
+        // MANAGEMENT 45. ResponseUtil.wrapOrNotFound : httpstatus.ok 상태로 responseEntity로 래핑, 비어있으면 httpstatus.not_found 상태로 예외 처리
+        // updatedUser를 응답 body에 넣음
+        // 헤더로 alert 생성(applicationName, 문자열, 로그인 아이디)
         return ResponseUtil.wrapOrNotFound(
             updatedUser,
             HeaderUtil.createAlert(applicationName, "A user is updated with identifier " + userDTO.getLogin(), userDTO.getLogin())
@@ -163,20 +175,37 @@ public class UserResource {
      * @param pageable the pagination information.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body all users.
      */
+    // MANAGEMENT 14. user-management.reducer.ts에서 get 방식 요청을 보냄
     @GetMapping("/users")
+    // @preAuthorize : 안의 조건을 만족하면 invoke 시킴, 즉 조건식 true일 때만 메소드 실행
+    // 권한이 admin일 때 실행
+    // pageable => Page request [number: 0, size 20, sort: id: ASC]
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<List<AdminUserDTO>> getAllUsers(@org.springdoc.api.annotations.ParameterObject Pageable pageable) {
         log.debug("REST request to get all User for an admin");
+        // MANAGEMENT 15. 요청 파라미터를 입력 파라미터로 하여 onlyContainsAllowedProperties 메소드 실행
         if (!onlyContainsAllowedProperties(pageable)) {
+            // MANAGEMENT 17. 하나라도 일치하지 않으면 badRequest 리턴
             return ResponseEntity.badRequest().build();
         }
 
+        // MANAGEMENT 18. UserService의 pageable을 파라미터로 하여 getAllManagedUsers 메소드 실행
+        // MANAGEMENT 20. 유저 객체들을 리턴받아 page에 할당
         final Page<AdminUserDTO> page = userService.getAllManagedUsers(pageable);
+        // MANAGEMENT 21. 응답 헤더를 생성
+        // ServletUriComponentsBuilder : 특정한 값을 포함한 uri를 전달할 때 사용
+        // fromCurrentRequest() : 현재 요청된 request 값을 사용
+        // 사용자가 요청한 uri와 유저 객체들을 담고 있는 page를 넣음
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        // MANAGEMENT 22. 응답 body에 page의 내용, 헤더에 headers, status에 200을 담아 리턴
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
     private boolean onlyContainsAllowedProperties(Pageable pageable) {
+        // MANAGEMENT 16. 파라미터의 sort를 가져옴
+        // Sort domain의 order 방식을 가져옴
+        // 정렬하기 위한 속성을 나열함
+        // 모든 나열된 속성의 형태가 ALLOWED_ORDERED_PROPERTIES 형태와 일치하는지 검사하고 결과 리턴
         return pageable.getSort().stream().map(Sort.Order::getProperty).allMatch(ALLOWED_ORDERED_PROPERTIES::contains);
     }
 
