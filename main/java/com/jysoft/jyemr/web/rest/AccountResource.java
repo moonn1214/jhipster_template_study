@@ -55,13 +55,20 @@ public class AccountResource {
      * @throws EmailAlreadyUsedException {@code 400 (Bad Request)} if the email is already used.
      * @throws LoginAlreadyUsedException {@code 400 (Bad Request)} if the login is already used.
      */
+    // REGISTER 15. 요청에 의해 메소드 실행, created = 201 = 생성 요청 성공
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
+    // REGISTER 16. RequestBody에 의해 요청으로 넘어온 데이터인 login, email, password가 ManagedUserVM에 들어감
     public void registerAccount(@Valid @RequestBody ManagedUserVM managedUserVM) {
+        // REGISTER 17. 패스워드 길이 검사
+        // REGISTER 19. true 리턴 시(유효하지 않을 때) 예외 발생 후 종료
         if (isPasswordLengthInvalid(managedUserVM.getPassword())) {
             throw new InvalidPasswordException();
         }
+        // REGISTER 20. 패스워드 유효성 검사 통과하면 UserService.java의 registerUser 메소드 실행(managedUserVM 객체와 패스워드를 넘김)
+        // REGISTER 51. 새로운 유저 객체가 리턴되어 user에 할당
         User user = userService.registerUser(managedUserVM, managedUserVM.getPassword());
+        // REGISTER 52. MailService.java의 sendActivationEmail 메소드 실행(새 유저 객체를 파라미터로 입력), 이메일을 전송
         mailService.sendActivationEmail(user);
     }
 
@@ -190,6 +197,8 @@ public class AccountResource {
         }
     }
 
+    // REGISTER 18. 패스워드 유효성 검사
+    // 패스워드가 비어있다, 최소 길이보다 작다, 최대 길이보다 길다, 하나라도 true이면 true 리턴
     private static boolean isPasswordLengthInvalid(String password) {
         return (
             StringUtils.isEmpty(password) ||

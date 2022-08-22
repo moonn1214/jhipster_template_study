@@ -93,55 +93,87 @@ public class UserService {
             });
     }
 
+    // REGISTER 21. 메소드 실행, 유저 정보와 패스워드 받음
     public User registerUser(AdminUserDTO userDTO, String password) {
         userRepository
+            // REGISTER 22. UserRepository의 findOneBylogin 메소드 실행(넘겨 받은 유저 정보 중 로그인 아이디를 소문자로 변환하여 넘김)
             .findOneByLogin(userDTO.getLogin().toLowerCase())
+            // REGISTER 23. 로그인 아이디로 아이디를 찾아보고 있다면 실행
             .ifPresent(existingUser -> {
+                // REGISTER 24. 찾은 아이디를 파라미터로 removeNonActivatedUser 메소드 실행
+                // 해당 아이디가 활성화 상태면 false, 비활성화 상태면 아이디 삭제 후 true
                 boolean removed = removeNonActivatedUser(existingUser);
+                // REGISTER 32. 활성화 상태면 UsernameAlreadyUsedException 예외
                 if (!removed) {
                     throw new UsernameAlreadyUsedException();
                 }
             });
         userRepository
+            // REGISTER 33. UserRepository의 findOneByEmailIgnoreCase 메소드 실행(이메일을 넘김)
             .findOneByEmailIgnoreCase(userDTO.getEmail())
+            // REGISTER 34. 해당 이메일이 존재하면 실행
             .ifPresent(existingUser -> {
+                // REGISTER 35. 해당 이메일을 가진 아이디가 활성화 상태면 예외 처리
                 boolean removed = removeNonActivatedUser(existingUser);
                 if (!removed) {
                     throw new EmailAlreadyUsedException();
                 }
             });
+        // REGISTER 36. 새로운 유저 객체 생성
         User newUser = new User();
+        // REGISTER 37. 패스워드를 암호화
         String encryptedPassword = passwordEncoder.encode(password);
+        // REGISTER 38. 새 유저 객체의 아이디를 입력받은 아이디(소문자 변환)로 설정
         newUser.setLogin(userDTO.getLogin().toLowerCase());
+        // REGISTER 39. 새 유저 객체의 패스워드를 암호화한 패스워드로 설정
         // new user gets initially a generated password
         newUser.setPassword(encryptedPassword);
+        // REGISTER 40. firstname과 lastname 설정
         newUser.setFirstName(userDTO.getFirstName());
         newUser.setLastName(userDTO.getLastName());
+        // REGISTER 41. 이메일이 입력 받은 이메일이 null이 아니면 새 유저 객체의 이메이로 설정
         if (userDTO.getEmail() != null) {
             newUser.setEmail(userDTO.getEmail().toLowerCase());
         }
+        // REGISTER 42. imageurl, langkey 설정
         newUser.setImageUrl(userDTO.getImageUrl());
         newUser.setLangKey(userDTO.getLangKey());
+        // REGISTER 43. 활성/비활성화 상태는 비활성화로 초기화
         // new user is not active
         newUser.setActivated(false);
+        // REGISTER 44. 새 유저 객체의 activatekey를 난수로 생성하여 설정
         // new user gets registration key
         newUser.setActivationKey(RandomUtil.generateActivationKey());
+        // REGISTER 45. HashSet => 순서대로 입력되지 않고 일정하게 유지되지 않음, null 허용, 중복 허용하지 않음
+        // Authority 객체 생성
         Set<Authority> authorities = new HashSet<>();
+        // REGISTER 46. ROLE_USER인 권한을 찾고, 있으면 authorities 객체에 해당 권한을 추가 (권한 설정)
+        // AuthoritiesConstants.USER : ROLE_USER
+        // authorityRepository.findById(AuthoritiesConstants.USER) : Optional[Authority{name='ROLE_USER'}]
         authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
+        // REGISTER 47. 새 유저 객체의 Authorities를 authorities로 설정
         newUser.setAuthorities(authorities);
+        // REGISTER 48. UserRepository에 새 유저 객체 저장
         userRepository.save(newUser);
+        // REGISTER 49. 새 유저 객체의 캐시 삭제
         this.clearUserCaches(newUser);
         log.debug("Created Information for User: {}", newUser);
+        // REGISTER 50. 새 유저 객체 리턴
         return newUser;
     }
 
     private boolean removeNonActivatedUser(User existingUser) {
+        // REGISTER 25. 해당 아이디가 활성화 상태라면 false 리턴
         if (existingUser.isActivated()) {
             return false;
         }
+        // REGISTER 26. 비활성화 상태이면 해당 아이디를 삭제
         userRepository.delete(existingUser);
+        // REGISTER 27. 버퍼를 삭제
         userRepository.flush();
+        // REGISTER 28. 아이디를 파라미터로 clearUserCaches 실행 (캐시 삭제)
         this.clearUserCaches(existingUser);
+        // REGISTER 31. true 리턴
         return true;
     }
 
@@ -317,7 +349,12 @@ public class UserService {
     }
 
     private void clearUserCaches(User user) {
+        // REGISTER 29. requireNonNull => Null 체크를 위한 메소드, 파라미터 값이 null이면 NullPointException 발생 / null이 아니면 값을 그대로 반환
+        // evict => 데이터 삭제
+        // 로그인 캐시에 의한 유저의 값이 null이면 예외 발생, 아니면 값을 리턴
+        // 위 결과에서 파라미터로 넘어온 유저의 로그인 아이디 캐시 데이터를 삭제
         Objects.requireNonNull(cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE)).evict(user.getLogin());
+        // REGISTER 30. 유저의 이메일이 null이 아니면 이메일 정보도 위와 같이 처리
         if (user.getEmail() != null) {
             Objects.requireNonNull(cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE)).evict(user.getEmail());
         }

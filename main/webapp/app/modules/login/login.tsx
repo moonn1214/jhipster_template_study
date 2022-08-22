@@ -12,7 +12,7 @@ export const Login = () => {
   const isAuthenticated = useAppSelector(state => state.authentication.isAuthenticated);
   const loginError = useAppSelector(state => state.authentication.loginError);
   const showModalLogin = useAppSelector(state => state.authentication.showModalLogin);
-  // LOGIN 10. state 상태 관리, 로그인 모달 상태
+  // LOGIN 10. state 상태 관리, 로그인 모달 상태 변경을 위해
   const [showModal, setShowModal] = useState(showModalLogin);
   const navigate = useNavigate();
   const location = useLocation();

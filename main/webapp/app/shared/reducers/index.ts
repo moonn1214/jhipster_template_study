@@ -15,6 +15,7 @@ import entitiesReducers from 'app/entities/reducers';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 // LOGIN 45. 여기에서 authentication 액션이 실행되는 듯
+// REGISTER 70. register 액션 실행 예상
 const rootReducer: ReducersMapObject = {
   authentication,
   applicationProfile,

@@ -24,7 +24,7 @@ const accountMenuItems = () => (
     <MenuItem id="login-item" icon="sign-in-alt" to="/login" data-cy="login">
       인증
     </MenuItem>
-    {/* register.tsx 호출 */}
+    {/* REGISTER 1. register.tsx 호출(routes.tsx에 의해) */}
     <MenuItem icon="user-plus" to="/account/register" data-cy="register">
       등록
     </MenuItem>
