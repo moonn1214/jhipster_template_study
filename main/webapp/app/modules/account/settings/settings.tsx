@@ -26,7 +26,7 @@ export const SettingsPage = () => {
     };
   }, []);
 
-  // SETTINGS 10. 성공 메세지가 있으면 토스트 팝업으로 출력
+  // SETTINGS 10. 성공 메세지의 값이 변경되면 토스트 팝업으로 출력
   useEffect(() => {
     if (successMessage) {
       toast.success(successMessage);

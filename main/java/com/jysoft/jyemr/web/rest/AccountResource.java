@@ -164,11 +164,14 @@ public class AccountResource {
      * @param passwordChangeDto current and new password.
      * @throws InvalidPasswordException {@code 400 (Bad Request)} if the new password is incorrect.
      */
+    // PASSWORD 18. currentPassword, newPassword가 담긴 IPassword를 RequestBody로 PasswordChangeDTO로 변환
     @PostMapping(path = "/account/change-password")
     public void changePassword(@RequestBody PasswordChangeDTO passwordChangeDto) {
+        // PASSWORD 19. 새로운 패스워드가 유효한 형태가 아니라면 예외 처리하고 종료
         if (isPasswordLengthInvalid(passwordChangeDto.getNewPassword())) {
             throw new InvalidPasswordException();
         }
+        // PASSWORD 20. UserService의 changePassword 메소드를 실행(현재 패스워드와 새로운 패스워드를 파라미터로 넘김)
         userService.changePassword(passwordChangeDto.getCurrentPassword(), passwordChangeDto.getNewPassword());
     }
 

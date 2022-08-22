@@ -22,12 +22,16 @@ interface IPassword {
 
 // Actions
 
+// PASSWORD 16. currentPassword, newPassword를 받아서 실행
 export const savePassword = createAsyncThunk(
   'password/update_password',
+  // PASSWORD 17. axios(http 비동기 통신 라이브러리) 방식으로 post 방식, 'api/account/change-password'를 요청으로 보냄 (AccountResource.java)
+  // currentPassword와 newPassword를 IPassword에 담아서 요청으로 넘김
   async (password: IPassword) => axios.post(`${apiUrl}/change-password`, password),
   { serializeError: serializeAxiosError }
 );
 
+// PASSWORD 30. index.ts에 의해 password 액션 실행
 export const PasswordSlice = createSlice({
   name: 'password',
   initialState: initialState as PasswordState,
@@ -36,6 +40,7 @@ export const PasswordSlice = createSlice({
       return initialState;
     },
   },
+  // PASSWORD 31 END. savePassword 액션의 상태에 따라 state 설정
   extraReducers(builder) {
     builder
       .addCase(savePassword.pending, state => {

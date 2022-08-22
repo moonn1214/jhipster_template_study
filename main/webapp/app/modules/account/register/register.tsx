@@ -13,7 +13,7 @@ export const RegisterPage = () => {
   // REGISTER 3. dispatch 사용을 위해 선언
   const dispatch = useAppDispatch();
 
-  // REGISTER 4. 해당 컴포넌트가 렌더링 될 때 reset 메소드 호출
+  // REGISTER 4. 해당 컴포넌트가 렌더링 될 때 reset 액션 호출
   useEffect(
     () => () => {
       dispatch(reset());
@@ -22,7 +22,7 @@ export const RegisterPage = () => {
   );
 
   // REGISTER 5. 폼 전송 메소드
-  // REGISTER 13. handleRegister 호출 (입력 정보를 파라미터로 사용)
+  // REGISTER 13. handleRegister 액션 호출 (입력 정보를 파라미터로 사용)
   const handleValidSubmit = ({ username, email, firstPassword }) => {
     dispatch(handleRegister({ login: username, email, password: firstPassword, langKey: 'en' }));
   };
@@ -33,7 +33,7 @@ export const RegisterPage = () => {
   // REGISTER 7. 등록 성공 메세지를 store에서 가져옴
   const successMessage = useAppSelector(state => state.register.successMessage);
 
-  // REGISTER 8. 등록 성공 메세지가 있으면 토스트 팝업 표시
+  // REGISTER 8. 등록 성공 메세지 값이 변경되면 토스트 팝업 표시
   useEffect(() => {
     if (successMessage) {
       toast.success(successMessage);

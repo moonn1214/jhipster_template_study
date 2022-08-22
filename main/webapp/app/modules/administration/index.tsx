@@ -12,6 +12,7 @@ import Docs from './docs/docs';
 const AdministrationRoutes = () => (
   <div>
     <ErrorBoundaryRoutes>
+      {/* MANAGEMENT 3. 컴포넌트 사용 경로 지정 */}
       <Route path="user-management/*" element={<UserManagement />} />
       <Route path="health" element={<Health />} />
       <Route path="metrics" element={<Metrics />} />

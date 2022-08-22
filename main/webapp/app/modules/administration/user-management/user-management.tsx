@@ -11,15 +11,24 @@ import { getUsersAsAdmin, updateUser } from './user-management.reducer';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 export const UserManagement = () => {
+  // MANAGEMENT 6. dispatch를 사용하기 위해
   const dispatch = useAppDispatch();
 
+  // MANAGEMENT 7. useLocation : 현재 페이지에 대한 정보를 알려주는 hooks
   const location = useLocation();
+  // MANAGEMENT 8. useNavigate : 양식이 제출되거나 특정 event가 발생할 때 url을 조작하는 hooks
   const navigate = useNavigate();
 
+  // MANAGEMENT 9. 페이지 상태 관리
   const [pagination, setPagination] = useState(
+    // MANAGEMENT 10. 현재 페이지 정보, 페이지당 항목 수(20), id라는 이름으로 가져온 IPaginationBaseState와 pathname의 ? 다음의 문자열(쿼리 문자열)
+    // 두 가지를 파라미터로 아래 메소드 실행(entity-utils.ts의 메소드)
+    // 두가지 정보로 현재 페이지 설정
     overridePaginationStateWithQueryParams(getSortState(location, ITEMS_PER_PAGE, 'id'), location.search)
   );
 
+  // MANAGEMENT 12. user-management.reducer.ts의 getUsersAsAdmin 액션 호출
+  // 현재페이지-1, 페이지당 항목 수, 정렬 기준과 방식을 파라미터로 입력
   const getUsersFromProps = () => {
     dispatch(
       getUsersAsAdmin({
@@ -34,6 +43,7 @@ export const UserManagement = () => {
     }
   };
 
+  // MANAGEMENT 11. activePage, order, sort가 변결될 때 getUsersFromProps 실행
   useEffect(() => {
     getUsersFromProps();
   }, [pagination.activePage, pagination.order, pagination.sort]);

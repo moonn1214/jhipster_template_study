@@ -6,6 +6,7 @@ import { NavDropdown } from './menu-components';
 
 const adminMenuItems = () => (
   <>
+    {/* MANAGEMENT 4. administration/index.tsx에 의해 해당 경로는 UserManagement 컴포넌트 사용(administration/user-manegement/index.tsx) */}
     <MenuItem icon="users" to="/admin/user-management">
       사용자 관리
     </MenuItem>
@@ -39,6 +40,7 @@ const databaseItem = () => (
 
 export const AdminMenu = ({ showOpenAPI, showDatabase }) => (
   <NavDropdown icon="users-cog" name="관리자" id="admin-menu" data-cy="adminMenu">
+    {/* MANAGEMENT 2. adminMenuItems 실행 */}
     {adminMenuItems()}
     {showOpenAPI && openAPIItem()}
 

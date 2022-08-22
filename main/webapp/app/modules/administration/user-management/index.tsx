@@ -9,6 +9,7 @@ import UserManagementDeleteDialog from './user-management-delete-dialog';
 
 const UserManagementRoutes = () => (
   <ErrorBoundaryRoutes>
+    {/* MANAGEMENT 5. index는 UserManagement 컴포넌트로 지정(user-management.tsx) */}
     <Route index element={<UserManagement />} />
     <Route path="new" element={<UserManagementUpdate />} />
     <Route path=":login">

@@ -24,7 +24,7 @@ export type AuthenticationState = Readonly<typeof initialState>;
 
 // Actions
 
-// LOGIN 40. getAccount 메소드 호출
+// LOGIN 40. getAccount 액션 호출
 // ?????? 응답 후 state를 어디서 변경하는지 (AccountResource.java에서 getmapping으로 뷰를 반환하지도 않고) 아래 AuthenticationSlice?
 export const getSession = (): AppThunk => (dispatch, getState) => {
   dispatch(getAccount());
@@ -55,7 +55,7 @@ export const authenticate = createAsyncThunk(
 export const login: (username: string, password: string, rememberMe?: boolean) => AppThunk =
   (username, password, rememberMe = false) =>
   async dispatch => {
-    // LOGIN 26. authenticate(axios 요청) 메소드를 호출 후 응답을 result에 초기화
+    // LOGIN 26. authenticate(axios 요청) 액션을 호출 후 응답을 result에 초기화
     const result = await dispatch(authenticate({ username, password, rememberMe }));
     // LOGIN 36. result의 payload를 AxiosResponse 타입으로 다운캐스팅
     const response = result.payload as AxiosResponse;
@@ -92,7 +92,7 @@ export const clearAuthToken = () => {
 export const logout: () => AppThunk = () => dispatch => {
   // LOGOUT 7. clearAuthToken 메소드 실행
   clearAuthToken();
-  // LOGOUT 9. logoutSession 메소드 호출
+  // LOGOUT 9. logoutSession 액션 호출
   dispatch(logoutSession());
 };
 

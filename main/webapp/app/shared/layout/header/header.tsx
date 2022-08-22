@@ -41,6 +41,9 @@ const Header = (props: IHeaderProps) => {
           <Nav id="header-tabs" className="ms-auto" navbar>
             <Home />
             {props.isAuthenticated && <EntitiesMenu />}
+            {/* MANAGEMENT 1. app.tsx에서 설정한 값을 사용(app.tsx에서는 store를 조회하고 state를 변경, header 컴포넌트 사용) */}
+            {/* isAuthenticated 와 isAdmin이 True이면 AdminMenu 컴포넌트 사용(admin.tsx) */}
+            {/* isOpenAPIEnabled, isInProduction 값을 사용할 수 있도록 넘겨줌 */}
             {props.isAuthenticated && props.isAdmin && (
               <AdminMenu showOpenAPI={props.isOpenAPIEnabled} showDatabase={!props.isInProduction} />
             )}

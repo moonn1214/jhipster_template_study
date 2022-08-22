@@ -304,18 +304,30 @@ public class UserService {
             });
     }
 
+    // @Transactional이 붙은 메소드는 메소드가 포함한 작업 중 하나라도 실패하면 전체 작업을 취소함
+    // 일련의 작업들을 묶어서 하나의 단위로 처리할 때 사용
     @Transactional
     public void changePassword(String currentClearTextPassword, String newPassword) {
         SecurityUtils
+            // PASSWORD 21. 현재 로그인한 유저의 아이디를 가져옴
             .getCurrentUserLogin()
+            // PASSWORD 22. 현재 로그인한 아이디로 userRepository에서 유저 정보를 찾음
             .flatMap(userRepository::findOneByLogin)
+            // PASSWORD 23. 존재하면 실행
             .ifPresent(user -> {
+                // PASSWORD 24. 찾아온 유저의 패스워드를 가져와 currentEncryptedPassword 변수에 할당
                 String currentEncryptedPassword = user.getPassword();
+                // PASSWORD 25. 입력한 현재 패스워드와 찾아온 유저의 패스워드를 비교
+                // passwordEncoder.matches() : 평문 패스워드(암호화하지 않은)와 암호화된 패스워도를 비교해줌
+                // 같지 않다면 예외 처리하고 종료
                 if (!passwordEncoder.matches(currentClearTextPassword, currentEncryptedPassword)) {
                     throw new InvalidPasswordException();
                 }
+                // PASSWORD 26. 새로운 패스워드를 암호화하여 encryptedPassword 변수에 할당
                 String encryptedPassword = passwordEncoder.encode(newPassword);
+                // PASSWORD 27. 찾아온 유저의 패스워드를 암호화한 새로운 패스워드로 설정
                 user.setPassword(encryptedPassword);
+                // PASSWORD 28. user의 캐시 삭제
                 this.clearUserCaches(user);
                 log.debug("Changed password for User: {}", user);
             });

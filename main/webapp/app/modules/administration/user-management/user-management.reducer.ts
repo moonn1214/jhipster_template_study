@@ -25,8 +25,10 @@ export const getUsers = createAsyncThunk('userManagement/fetch_users', async ({ 
   return axios.get<IUser[]>(requestUrl);
 });
 
+// MANAGEMENT 13. 현재페이지-1, 페이지당 항목 수, 정렬 기준과 방식을 넘겨받음
 export const getUsersAsAdmin = createAsyncThunk('userManagement/fetch_users_as_admin', async ({ page, size, sort }: IQueryParams) => {
   const requestUrl = `${adminUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  // axios get방식으로 요청함, 요청 url : api/admin/users?page=값&size=값&sort=값 또는 api/admin/users (UserResource.java)
   return axios.get<IUser[]>(requestUrl);
 });
 
