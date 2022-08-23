@@ -248,10 +248,14 @@ public class UserResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/users/{login}")
+    // MANAGEMENT-DELETE 20. 권한이 admin일 때만 실행
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
+    // MANAGEMENT-DELETE 21. 요청 url의 파라미터로 전달받은 값인 login의 패턴을 검증하고 메소드의 파라미터로 받을 수 있게 함
     public ResponseEntity<Void> deleteUser(@PathVariable @Pattern(regexp = Constants.LOGIN_REGEX) String login) {
         log.debug("REST request to delete User: {}", login);
+        // MANAGEMENT-DELETE 22. 로그인 아이디를 파라미터로 deleteUser 메소드 실행(UserService.java)
         userService.deleteUser(login);
+        // MANAGEMENT-DELETE 24. 응답 header에 아래 내용을 담아 리턴 
         return ResponseEntity
             .noContent()
             .headers(HeaderUtil.createAlert(applicationName, "A user is deleted with identifier " + login, login))

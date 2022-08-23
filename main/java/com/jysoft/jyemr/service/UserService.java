@@ -279,6 +279,7 @@ public class UserService {
 
     public void deleteUser(String login) {
         userRepository
+            // MANAGEMENT-DELETE 23. 넘겨 받은 로그인 아이디로 userRepository에서 유저를 찾고 존재하면 삭제, 캐시 삭제
             .findOneByLogin(login)
             .ifPresent(user -> {
                 userRepository.delete(user);

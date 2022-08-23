@@ -58,10 +58,10 @@ export const getRoles = createAsyncThunk('userManagement/fetch_roles', async () 
 export const getUser = createAsyncThunk(
   'userManagement/fetch_user',
   async (id: string) => {
-    // MANAGEMENT-DETAIL 6. MANAGEMENT-EDIT 8. id => 넘겨 받은 로그인 아이디로 요청 url 생성
+    // MANAGEMENT-DETAIL 6. MANAGEMENT-EDIT 8. MANAGEMENT-DELETE 7. id => 넘겨 받은 로그인 아이디로 요청 url 생성
     const requestUrl = `${adminUrl}/${id}`;
-    // MANAGEMENT-DETAIL 7. MANAGEMENT-EDIT 9. axios get 방식 통신, 요청을 보냄 (UserResource.java)
-    // MANAGEMENT-DETAIL 11. MANAGEMENT-EDIT 10. 응답 body에는 권한 있는 유저 객체와 상태 코드가 리턴됨
+    // MANAGEMENT-DETAIL 7. MANAGEMENT-EDIT 9. MANAGEMENT-DELETE 8. axios get 방식 통신, 요청을 보냄 (UserResource.java)
+    // MANAGEMENT-DETAIL 11. MANAGEMENT-EDIT 10. MANAGEMENT-DELETE 9. 응답 body에는 권한 있는 유저 객체와 상태 코드가 리턴됨
     return axios.get<IUser>(requestUrl);
   },
   { serializeError: serializeAxiosError }
@@ -100,9 +100,14 @@ export const updateUser = createAsyncThunk(
 export const deleteUser = createAsyncThunk(
   'userManagement/delete_user',
   async (id: string, thunkAPI) => {
+    // MANAGEMENT-DELETE 18. 유저의 로그인 아이디를 포함하여 요청 url 생성
     const requestUrl = `${adminUrl}/${id}`;
+    // MANAGEMENT-DELETE 19. axios delete 방식 요청(UserResource.java)
+    // MANAGEMENT-DELETE 25. 응답을 반환 받음
     const result = await axios.delete<IUser>(requestUrl);
+    // MANAGEMENT-DELETE 26. getUsersAsAdmin 액션 호출
     thunkAPI.dispatch(getUsersAsAdmin({}));
+    // MANAGEMENT-DELETE 27. 반환 받은 응답을 리턴, 아래의 액션에서 state 변경
     return result;
   },
   { serializeError: serializeAxiosError }
