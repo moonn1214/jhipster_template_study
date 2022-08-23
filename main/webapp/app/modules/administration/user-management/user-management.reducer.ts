@@ -100,7 +100,7 @@ export const deleteUser = createAsyncThunk(
 
 export type UserManagementState = Readonly<typeof initialState>;
 
-// MANAGEMENT 54. user 정보 및 항목 수 등 index.ts에 의해 실행되어 state 관리됨
+// MANAGEMENT 54 END. user 정보 및 항목 수 등 index.ts에 의해 실행되어 state 관리됨
 export const UserManagementSlice = createSlice({
   name: 'userManagement',
   initialState: initialState as UserManagementState,
