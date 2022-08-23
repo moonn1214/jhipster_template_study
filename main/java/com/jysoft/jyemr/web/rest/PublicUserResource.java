@@ -60,6 +60,7 @@ public class PublicUserResource {
      */
     @GetMapping("/authorities")
     public List<String> getAuthorities() {
+        // MANAGEMENT-NEW 11. UserService의 getAuthorities 메소드 실행
         return userService.getAuthorities();
     }
 }

@@ -178,26 +178,34 @@ public class UserService {
     }
 
     public User createUser(AdminUserDTO userDTO) {
+        // MANAGEMENT-NEW 28. 유저 객체 생성하여 넘겨 받은 로그인아이디, firstname, lastname을 설정
         User user = new User();
         user.setLogin(userDTO.getLogin().toLowerCase());
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
+        // MANAGEMENT-NEW 29. 넘겨 받은 유저의 이메일이 null이 아니면 유저 객체에 설정
         if (userDTO.getEmail() != null) {
             user.setEmail(userDTO.getEmail().toLowerCase());
         }
+        // MANAGEMENT-NEW 30. imageurl 설정
         user.setImageUrl(userDTO.getImageUrl());
+        // MANAGEMENT-NEW 31. 넘겨 받은 유저의 langkey가 null이면 default인 ko로 설정하고 아니면 넘겨 받은 값으로 설정
         if (userDTO.getLangKey() == null) {
             user.setLangKey(Constants.DEFAULT_LANGUAGE); // default language
         } else {
             user.setLangKey(userDTO.getLangKey());
         }
+        // MANAGEMENT-NEW 32. 난수로 생성한 패스워드를 암호화하여 변수에 초기화
         String encryptedPassword = passwordEncoder.encode(RandomUtil.generatePassword());
+        // MANAGEMENT-NEW 33. 패스워드 설정, 난수로 생성한 resetkey 설정, 현재시간을 resetdate로 설정, 활성상태 true 설정
         user.setPassword(encryptedPassword);
         user.setResetKey(RandomUtil.generateResetKey());
         user.setResetDate(Instant.now());
         user.setActivated(true);
         if (userDTO.getAuthorities() != null) {
+            // MANAGEMENT-NEW 34. 넘겨 받은 유저의 권한이 null이 아니면
             Set<Authority> authorities = userDTO
+                // 넘겨 받은 유저의 권한으로 authorityRepository에서 찾고 존재 여부 확인 후 리스트로 변환하여 변수에 초기화하고 유저 객체의 권한에 설정
                 .getAuthorities()
                 .stream()
                 .map(authorityRepository::findById)
@@ -206,6 +214,7 @@ public class UserService {
                 .collect(Collectors.toSet());
             user.setAuthorities(authorities);
         }
+        // MANAGEMENT-NEW 35. UserRepository에 저장, 캐시 삭제 후 유저 객체 리턴
         userRepository.save(user);
         this.clearUserCaches(user);
         log.debug("Created Information for User: {}", user);
@@ -383,6 +392,7 @@ public class UserService {
      */
     @Transactional(readOnly = true)
     public List<String> getAuthorities() {
+        // MANAGEMENT-NEW 12. authorityRepository에서 모든 요소를 찾음, 요소의 이름을 찾음, 리스트로 변환하여 리턴
         return authorityRepository.findAll().stream().map(Authority::getName).collect(Collectors.toList());
     }
 

@@ -120,7 +120,7 @@ export const UserManagement = () => {
           <Button className="me-2" color="info" onClick={handleSyncList} disabled={loading}>
             <FontAwesomeIcon icon="sync" spin={loading} /> Refresh list
           </Button>
-          {/* MANAGEMENT 33. MANAGEMENT-UPDATE 1. 생성을 선택하면 /new 링크로 이동 (user-management/index.tsx에서 지정) */}
+          {/* MANAGEMENT 33. MANAGEMENT-NEW 1. 생성을 선택하면 /new 링크로 이동 (user-management/index.tsx에서 지정) */}
           <Link to="new" className="btn btn-primary jh-create-entity">
             <FontAwesomeIcon icon="plus" /> 사용자 생성
           </Link>

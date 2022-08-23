@@ -122,6 +122,7 @@ public class MailService {
     @Async
     public void sendCreationEmail(User user) {
         log.debug("Sending creation email to '{}'", user.getEmail());
+        // MANAGEMENT-NEW 38. sendEmailFromTemplate 실행
         sendEmailFromTemplate(user, "mail/creationEmail", "email.activation.title");
     }
 

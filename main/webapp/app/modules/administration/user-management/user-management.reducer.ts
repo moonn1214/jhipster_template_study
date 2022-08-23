@@ -50,13 +50,18 @@ export const getUsersAsAdmin = createAsyncThunk('userManagement/fetch_users_as_a
 });
 
 export const getRoles = createAsyncThunk('userManagement/fetch_roles', async () => {
+  // MANAGEMENT-NEW 10. axios get 통신 요청 (PublicUserResource.java)
+  // MANAGEMENT-NEW 13. 권한 리스트가 리턴됨
   return axios.get<any[]>(`api/authorities`);
 });
 
 export const getUser = createAsyncThunk(
   'userManagement/fetch_user',
   async (id: string) => {
+    // MANAGEMENT-UPDATE 10. id => 로그인한 유저의 로그인 아이디로 요청 url 생성
     const requestUrl = `${adminUrl}/${id}`;
+    // MANAGEMENT-UPDATE 11. axios get 방식 통신, 요청을 보냄 (UserResource.java)
+    // MANAGEMENT-UPDATE 15. 응답 body에는 권한 있는 유저 객체와 상태 코드가 리턴됨
     return axios.get<IUser>(requestUrl);
   },
   { serializeError: serializeAxiosError }
@@ -65,8 +70,12 @@ export const getUser = createAsyncThunk(
 export const createUser = createAsyncThunk(
   'userManagement/create_user',
   async (user: IUser, thunkAPI) => {
+    // MANAGEMENT-NEW 21. axios post 요청 방식, requesturl: 'api/admin/users', 작성된 유저의 정보를 파라미터로 요청(UserResource.java)
+    // MANAGEMENT-NEW 40. result에 responseEntity 할당
     const result = await axios.post<IUser>(adminUrl, user);
+    // MANAGEMENT-NEW 41. getUsersAsAdmin 액션 호출
     thunkAPI.dispatch(getUsersAsAdmin({}));
+    // MANAGEMENT-NEW 42. result 리턴
     return result;
   },
   { serializeError: serializeAxiosError }
@@ -105,6 +114,7 @@ export const UserManagementSlice = createSlice({
   name: 'userManagement',
   initialState: initialState as UserManagementState,
   reducers: {
+    // MANAGEMENT-NEW 8. 초기 상태 설정
     reset() {
       return initialState;
     },

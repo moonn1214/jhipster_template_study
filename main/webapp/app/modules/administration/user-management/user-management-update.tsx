@@ -8,38 +8,52 @@ import { getUser, getRoles, updateUser, createUser, reset } from './user-managem
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 export const UserManagementUpdate = () => {
+  // MANAGEMENT-NEW 3. dispatch(액션호출과 상태관리)와 navigate(url이동) 사용을 위해
   const dispatch = useAppDispatch();
 
   const navigate = useNavigate();
 
+  // MANAGEMENT-NEW 4. 현재 url의 login에 해당하는 객체를 반환
   const { login } = useParams<'login'>();
+  // MANAGEMENT-NEW 5. 로그인 아이디가 undefined이면 isNew=TRUE(생성), 아니면 isNew=FALSE(수정) (사용자 생성은 그냥 /new 이므로 isNew는 True)
   const isNew = login === undefined;
 
+  // MANAGEMENT-NEW 6. login 값이 변경될 때 실행
   useEffect(() => {
     if (isNew) {
+      // MANAGEMENT-NEW 7. 로그인 아이디가 undefined이면 reset 액션 호출(user-management.reducer.ts)
       dispatch(reset());
     } else {
+      // MANAGEMENT-UPDATE . 아니면 login을 파라미터로 getUser 액션 호출(user-management.reducer.ts)
       dispatch(getUser(login));
     }
+    // MANAGEMENT-NEW 9. getRoles 액션 호출(user-management.reducer.ts)
     dispatch(getRoles());
     return () => {
+      // MANAGEMENT-NEW 14. reset 액션 호출
       dispatch(reset());
     };
   }, [login]);
 
   const handleClose = () => {
+    // MANAGEMENT-NEW 44 END. 해당 uri로 이동
     navigate('/admin/user-management');
   };
 
+  // MANAGEMENT-NEW 18. 작성한 값들로 컴포넌트 실행
   const saveUser = values => {
+    // MANAGEMENT-NEW 19. 사용자 생성이면
     if (isNew) {
+      // MANAGEMENT-NEW 20. values를 파라미터로 createUser 액션 호출(user-management.reducer.ts)
       dispatch(createUser(values));
     } else {
       dispatch(updateUser(values));
     }
+    // MANAGEMENT-NEW 43. handleClose 실행
     handleClose();
   };
 
+  // MANAGEMENT-NEW 15. isInvalid는 false로 초기화, store에서 user, loading, updating, authorities 상태 정보를 가져옴
   const isInvalid = false;
   const user = useAppSelector(state => state.userManagement.user);
   const loading = useAppSelector(state => state.userManagement.loading);
@@ -55,9 +69,11 @@ export const UserManagementUpdate = () => {
       </Row>
       <Row className="justify-content-center">
         <Col md="8">
+          {/* MANAGEMENT-NEW 16. 로딩 상태 */}
           {loading ? (
             <p>Loading...</p>
           ) : (
+            // MANAGEMENT-NEW 17. form submit handler => saveUser
             <ValidatedForm onSubmit={saveUser} defaultValues={user}>
               {user.id ? <ValidatedField type="text" name="id" required readOnly label="ID" validate={{ required: true }} /> : null}
               <ValidatedField

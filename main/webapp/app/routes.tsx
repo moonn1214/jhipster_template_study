@@ -22,6 +22,7 @@ const Account = Loadable({
   loading: () => loading,
 });
 
+// ADMIN 2. app/modules/administration 의 모든 컴포넌트 사용
 const Admin = Loadable({
   loader: () => import(/* webpackChunkName: "administration" */ 'app/modules/administration'),
   loading: () => loading,
@@ -52,6 +53,7 @@ const AppRoutes = () => {
             <Route path="finish" element={<PasswordResetFinish />} />
           </Route>
         </Route>
+        {/* ADMIN 1. /admin/* 경로는 권한이 admin일 때만 Admin 컴포넌트 사용 */}
         <Route
           path="admin/*"
           element={

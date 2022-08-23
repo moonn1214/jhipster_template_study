@@ -106,20 +106,32 @@ public class UserResource {
      * @throws BadRequestAlertException {@code 400 (Bad Request)} if the login or email is already in use.
      */
     @PostMapping("/users")
+    // MANAGEMENT-NEW 22. 권한이 admin 일 때만 실행
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
+    // MANAGEMENT-NEW 23. RequestBody로 넘겨 받은 파라미터(새로 작성된 유저 정보)를 AdminUserDTO 타입으로 받고 Valid로 검증
+    // @RequestBody : 클라이언트가 전송하는 HttpBody를 Java 객체로 변환시킴
     public ResponseEntity<User> createUser(@Valid @RequestBody AdminUserDTO userDTO) throws URISyntaxException {
         log.debug("REST request to save User : {}", userDTO);
 
+        // MANAGEMENT-NEW 24. 넘겨 받은 유저의 아이디(넘버)가 null이 아니면 이미 있는 유저로 예외 처리
         if (userDTO.getId() != null) {
             throw new BadRequestAlertException("A new user cannot already have an ID", "userManagement", "idexists");
             // Lowercase the user login before comparing with database
-        } else if (userRepository.findOneByLogin(userDTO.getLogin().toLowerCase()).isPresent()) {
+        } 
+        // MANAGEMENT-NEW 25. 넘겨 받은 유저의 로그인아이디로가 이미 존재하면 예외 처리
+        else if (userRepository.findOneByLogin(userDTO.getLogin().toLowerCase()).isPresent()) {
             throw new LoginAlreadyUsedException();
-        } else if (userRepository.findOneByEmailIgnoreCase(userDTO.getEmail()).isPresent()) {
+        } 
+        // MANAGEMENT-NEW 26. 이메일 예외 처리
+        else if (userRepository.findOneByEmailIgnoreCase(userDTO.getEmail()).isPresent()) {
             throw new EmailAlreadyUsedException();
         } else {
+            // MANAGEMENT-NEW 27. 존재하지 않으면 넘겨 받은 유저를 파라미터로 createUser 메소드 실행(UserService.java)
+            // MANAGEMENT-NEW 36. 설정이 완료된 유저 객체를 반환 받아서 newUser에 할당
             User newUser = userService.createUser(userDTO);
+            // MANAGEMENT-NEW 37. newUser를 파라미터로 메소드 실행(MailService.java)
             mailService.sendCreationEmail(newUser);
+            // MANAGEMENT-NEW 39. 응답 객체 생성, 새로운 유저의 로그인아이디를 포함한 uri 생성, 헤더에 alert 생성, body에 새 유저 객체를 담아 리턴
             return ResponseEntity
                 .created(new URI("/api/admin/users/" + newUser.getLogin()))
                 .headers(
@@ -218,9 +230,13 @@ public class UserResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the "login" user, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/users/{login}")
+    // MANAGEMENT-UPDATE 12. 권한이 admin일 때만 메소드 실행
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
+    // MANAGEMENT-UPDATE 13. Pattern으로 로그인 아이디가 로그인 정규식 패턴에 적합한지 검사하고
+    // url 파라미터로 전달받은 value인 login을 PathVariable로 메서드의 파라미터로 받음
     public ResponseEntity<AdminUserDTO> getUser(@PathVariable @Pattern(regexp = Constants.LOGIN_REGEX) String login) {
         log.debug("REST request to get User : {}", login);
+        // MANAGEMENT-UPDATE 14. 로그인 아이디와 UserService의 메소드로 권한이 있는 유저를 찾아서 AdminUserDTO 타입의 객체로 생성 후 200번 코드와 함께 리턴
         return ResponseUtil.wrapOrNotFound(userService.getUserWithAuthoritiesByLogin(login).map(AdminUserDTO::new));
     }
 
