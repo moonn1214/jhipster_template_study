@@ -10,17 +10,23 @@ import { getUser } from './user-management.reducer';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 export const UserManagementDetail = () => {
+  // MANAGEMENT-DETAIL 3. 디스패치(액션 호출과 상태 관리) 사용을 위해
   const dispatch = useAppDispatch();
 
+  // MANAGEMENT-DETAIL 4. url에서 name이 login인 파라미터의 값을 사용(현재 상세정보 페이지의 유저 로그인 아이디)
   const { login } = useParams<'login'>();
 
+  // MANAGEMENT-DETAIL 5. 해당 컴포넌트가 렌더링될 때 실행
+  // login을 파라미터로 getUser 액션 호출 (user-management.reducer.ts)
   useEffect(() => {
     dispatch(getUser(login));
   }, []);
 
+  // MANAGEMENT-DETAIL 13. store에서 유저 정보 상태를 가져옴
   const user = useAppSelector(state => state.userManagement.user);
 
   return (
+    // MANAGEMENT-DETAIL 14 END. user의 정보를 토대로 양식 작성
     <div>
       <h2>
         사용자 [<strong>{user.login}</strong>]

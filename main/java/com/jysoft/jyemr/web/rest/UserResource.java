@@ -230,13 +230,13 @@ public class UserResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the "login" user, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/users/{login}")
-    // MANAGEMENT-UPDATE 12. 권한이 admin일 때만 메소드 실행
+    // MANAGEMENT-DETAIL 8. 권한이 admin일 때만 메소드 실행
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
-    // MANAGEMENT-UPDATE 13. Pattern으로 로그인 아이디가 로그인 정규식 패턴에 적합한지 검사하고
+    // MANAGEMENT-DETAIL 9. Pattern으로 로그인 아이디가 로그인 정규식 패턴에 적합한지 검사하고
     // url 파라미터로 전달받은 value인 login을 PathVariable로 메서드의 파라미터로 받음
     public ResponseEntity<AdminUserDTO> getUser(@PathVariable @Pattern(regexp = Constants.LOGIN_REGEX) String login) {
         log.debug("REST request to get User : {}", login);
-        // MANAGEMENT-UPDATE 14. 로그인 아이디와 UserService의 메소드로 권한이 있는 유저를 찾아서 AdminUserDTO 타입의 객체로 생성 후 200번 코드와 함께 리턴
+        // MANAGEMENT-DETAIL 10. 로그인 아이디를 파라미터로 UserService의 메소드로 권한이 있는 유저를 찾아서 AdminUserDTO 타입의 객체로 생성 후 200번 코드와 함께 리턴
         return ResponseUtil.wrapOrNotFound(userService.getUserWithAuthoritiesByLogin(login).map(AdminUserDTO::new));
     }
 

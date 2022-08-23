@@ -58,10 +58,10 @@ export const getRoles = createAsyncThunk('userManagement/fetch_roles', async () 
 export const getUser = createAsyncThunk(
   'userManagement/fetch_user',
   async (id: string) => {
-    // MANAGEMENT-UPDATE 10. id => 로그인한 유저의 로그인 아이디로 요청 url 생성
+    // MANAGEMENT-DETAIL 6. id => 넘겨 받은 로그인 아이디로 요청 url 생성
     const requestUrl = `${adminUrl}/${id}`;
-    // MANAGEMENT-UPDATE 11. axios get 방식 통신, 요청을 보냄 (UserResource.java)
-    // MANAGEMENT-UPDATE 15. 응답 body에는 권한 있는 유저 객체와 상태 코드가 리턴됨
+    // MANAGEMENT-DETAIL 7. axios get 방식 통신, 요청을 보냄 (UserResource.java)
+    // MANAGEMENT-DETAIL 11. 응답 body에는 권한 있는 유저 객체와 상태 코드가 리턴됨
     return axios.get<IUser>(requestUrl);
   },
   { serializeError: serializeAxiosError }
@@ -124,6 +124,7 @@ export const UserManagementSlice = createSlice({
       .addCase(getRoles.fulfilled, (state, action) => {
         state.authorities = action.payload.data;
       })
+      // MANAGEMENT-DETAIL 12. index.ts에 의해 실행되어 계속 상태가 변경되는 듯, 그래서 MANAGEMENT-DETAIL 13 에서도 user의 state를 가져와서 사용 가능한 듯
       .addCase(getUser.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload.data;
