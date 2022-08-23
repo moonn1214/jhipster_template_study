@@ -50,18 +50,18 @@ export const getUsersAsAdmin = createAsyncThunk('userManagement/fetch_users_as_a
 });
 
 export const getRoles = createAsyncThunk('userManagement/fetch_roles', async () => {
-  // MANAGEMENT-NEW 10. axios get 통신 요청 (PublicUserResource.java)
-  // MANAGEMENT-NEW 13. 권한 리스트가 리턴됨
+  // MANAGEMENT-NEW 10. MANAGEMENT-EDIT 13. axios get 통신 요청 (PublicUserResource.java)
+  // MANAGEMENT-NEW 13. MANAGEMENT-EDIT 14. 권한 리스트가 리턴됨
   return axios.get<any[]>(`api/authorities`);
 });
 
 export const getUser = createAsyncThunk(
   'userManagement/fetch_user',
   async (id: string) => {
-    // MANAGEMENT-DETAIL 6. id => 넘겨 받은 로그인 아이디로 요청 url 생성
+    // MANAGEMENT-DETAIL 6. MANAGEMENT-EDIT 8. id => 넘겨 받은 로그인 아이디로 요청 url 생성
     const requestUrl = `${adminUrl}/${id}`;
-    // MANAGEMENT-DETAIL 7. axios get 방식 통신, 요청을 보냄 (UserResource.java)
-    // MANAGEMENT-DETAIL 11. 응답 body에는 권한 있는 유저 객체와 상태 코드가 리턴됨
+    // MANAGEMENT-DETAIL 7. MANAGEMENT-EDIT 9. axios get 방식 통신, 요청을 보냄 (UserResource.java)
+    // MANAGEMENT-DETAIL 11. MANAGEMENT-EDIT 10. 응답 body에는 권한 있는 유저 객체와 상태 코드가 리턴됨
     return axios.get<IUser>(requestUrl);
   },
   { serializeError: serializeAxiosError }
@@ -83,14 +83,15 @@ export const createUser = createAsyncThunk(
 
 export const updateUser = createAsyncThunk(
   'userManagement/update_user',
-  // MANAGEMENT 37. user 정보와 상태 정보로 실행
+  // MANAGEMENT 37. user 정보로 실행
+  // MANAGEMENT-EDIT 21. 작성된 user 정보로 실행
   async (user: IUser, thunkAPI) => {
-    // MANAGEMENT 38. axios 통신 put 메소드로 요청을 보냄, 요청 url : api/admin/users, user 정보를 파라미터로 넘김(UserResource.java)
-    // MANAGEMENT 46. 응답을 result에 할당
+    // MANAGEMENT 38. MANAGEMENT-EDIT 22. axios 통신 put 메소드로 요청을 보냄, 요청 url : api/admin/users, user 정보를 파라미터로 넘김(UserResource.java)
+    // MANAGEMENT 46. MANAGEMENT-EDIT 26. 응답을 result에 할당
     const result = await axios.put<IUser>(adminUrl, user);
-    // MANAGEMENT 47. getUserAsAdmin 액션을 호출하여 모든 유저 조회
+    // MANAGEMENT 47. MANAGEMENT-EDIT 27. getUserAsAdmin 액션을 호출하여 모든 유저 조회
     thunkAPI.dispatch(getUsersAsAdmin({}));
-    // MANAGEMENT 48. 응답 리턴
+    // MANAGEMENT 48. MANAGEMENT-EDIT 28. 응답 리턴
     return result;
   },
   { serializeError: serializeAxiosError }
@@ -119,6 +120,7 @@ export const UserManagementSlice = createSlice({
       return initialState;
     },
   },
+  // MANAGEMENT-EDIT 11. MANAGEMENT-EDIT 15. getUser, getRoles 액션 실행으로 상태 변경, index.ts에 의해 실행
   extraReducers(builder) {
     builder
       .addCase(getRoles.fulfilled, (state, action) => {

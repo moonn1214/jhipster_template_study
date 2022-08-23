@@ -150,9 +150,9 @@ public class UserResource {
      * @throws LoginAlreadyUsedException {@code 400 (Bad Request)} if the login is already in use.
      */
     @PutMapping("/users")
-    // MANAGEMENT 39. 권한이 admin일 때만 실행
+    // MANAGEMENT 39. MANAGEMENT-EDIT 23. 권한이 admin일 때만 실행
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
-    // MANAGEMENT 40. 요청 파라미터로 넘어온 user 정보를 AdminUserDTO 타입으로 변환하여 생성 및 검증
+    // MANAGEMENT 40. MANAGEMENT-EDIT 24. 요청 파라미터로 넘어온 user 정보를 AdminUserDTO 타입으로 변환하여 생성 및 검증
     public ResponseEntity<AdminUserDTO> updateUser(@Valid @RequestBody AdminUserDTO userDTO) {
         log.debug("REST request to update User : {}", userDTO);
         // MANAGEMENT 41. 유저의 이메일로 유저를 찾음
@@ -174,7 +174,8 @@ public class UserResource {
         // 새로 설정한 유저 정보를 updatedUser에 할당
         Optional<AdminUserDTO> updatedUser = userService.updateUser(userDTO);
 
-        // MANAGEMENT 45. ResponseUtil.wrapOrNotFound : httpstatus.ok 상태로 responseEntity로 래핑, 비어있으면 httpstatus.not_found 상태로 예외 처리
+        // MANAGEMENT 45. MANAGEMENT-EDIT 25. 
+        // ResponseUtil.wrapOrNotFound : httpstatus.ok 상태로 responseEntity로 래핑, 비어있으면 httpstatus.not_found 상태로 예외 처리
         // updatedUser를 응답 body에 넣음
         // 헤더로 alert 생성(applicationName, 문자열, 로그인 아이디)
         return ResponseUtil.wrapOrNotFound(
