@@ -16,7 +16,9 @@ const UserManagementRoutes = () => (
     {/* MANAGEMENT-DETAIL 2. user의 login(아이디) 경로는 UserManagementDetail 컴포넌트 사용(user-management-detail.tsx) */}
     <Route path=":login">
       <Route index element={<UserManagementDetail />} />
+      {/* MANAGEMENT-EDIT 2. user의 login(아이디)/edit 경로는 UserManagementUpdate 컴포넌트 사용(user-management-detail.tsx) */}
       <Route path="edit" element={<UserManagementUpdate />} />
+      {/* MANAGEMENT-DELETE 2. user의 login(아이디)/delete 경로는 UserManagementDeleteDialog 컴포넌트 사용(user-management-detail.tsx) */}
       <Route path="delete" element={<UserManagementDeleteDialog />} />
     </Route>
   </ErrorBoundaryRoutes>

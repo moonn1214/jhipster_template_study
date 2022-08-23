@@ -18,6 +18,7 @@ import entitiesReducers from 'app/entities/reducers';
 // REGISTER 70. register 액션 실행 예상
 // SETTINGS 27. settings 액션 실행 예상
 // PASSWORD 29. password 액션 실행
+// MANAGEMENT 53. userManagement 액션 실행
 const rootReducer: ReducersMapObject = {
   authentication,
   applicationProfile,

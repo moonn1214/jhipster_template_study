@@ -143,15 +143,17 @@ public class UserResource {
     // MANAGEMENT 40. 요청 파라미터로 넘어온 user 정보를 AdminUserDTO 타입으로 변환하여 생성 및 검증
     public ResponseEntity<AdminUserDTO> updateUser(@Valid @RequestBody AdminUserDTO userDTO) {
         log.debug("REST request to update User : {}", userDTO);
-        // MANAGEMENT 41. 유저의 이메일로 유저의 로그인 아이디를 찾음
+        // MANAGEMENT 41. 유저의 이메일로 유저를 찾음
+        // findOneByEmailIgnoreCase(userDTO.getEmail()) : Optional[User{login='jkmoon', firstName='JongKug', lastName='Moon', email='jkmoon@jyoungsoft.com', imageUrl='null', activated='true', langKey='en', activationKey='KKph0LVWu26rOG5Qb9nq'}]
         Optional<User> existingUser = userRepository.findOneByEmailIgnoreCase(userDTO.getEmail());
-        // MANAGEMENT 42. 찾은 유저의 로그인 아이디가 존재하고
+        // MANAGEMENT 42. 찾은 유저가 존재하고
         //                찾은 유저의 아이디와 넘어온 유저의 아이디가 동일하지 않으면
         //                예외 처리하고 종료
         if (existingUser.isPresent() && (!existingUser.get().getId().equals(userDTO.getId()))) {
             throw new EmailAlreadyUsedException();
         }
-        // MANAGEMENT 43. 넘어온 유저의 로그인 아이디(소문자변환)로 유저의 로그인 아이디를 찾음, 위와 같이 처리
+        // MANAGEMENT 43. 넘어온 유저의 로그인 아이디(소문자변환)로 유저를 찾음, 위와 같이 처리
+        // findOneByLogin(userDTO.getLogin().toLowerCase()) : Optional[User{login='jkmoon', firstName='JongKug', lastName='Moon', email='jkmoon@jyoungsoft.com', imageUrl='null', activated='true', langKey='en', activationKey='KKph0LVWu26rOG5Qb9nq'}]
         existingUser = userRepository.findOneByLogin(userDTO.getLogin().toLowerCase());
         if (existingUser.isPresent() && (!existingUser.get().getId().equals(userDTO.getId()))) {
             throw new LoginAlreadyUsedException();

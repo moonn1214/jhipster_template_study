@@ -43,7 +43,7 @@ export const getUsersAsAdmin = createAsyncThunk('userManagement/fetch_users_as_a
                   createdDate=null, 
                   lastModifiedBy='system', 
                   lastModifiedDate=null, 
-                  authorities=[ROLE_USER, ROLE_ADMIN]}, 
+                  authorities=[ROLE_USER, ROLE_ADMIN]}, 등 모든 유저의 정보
                 ],[X-Total-Count:"2", Link:"<http://localhost:8080/api/admin/users?sort=id%2Casc&page=0&size=20>; 
                   rel="last",<http://localhost:8080/api/admin/users?sort=id%2Casc&page=0&size=20>; rel="first""]> */
   return axios.get<IUser[]>(requestUrl);
@@ -79,7 +79,9 @@ export const updateUser = createAsyncThunk(
     // MANAGEMENT 38. axios 통신 put 메소드로 요청을 보냄, 요청 url : api/admin/users, user 정보를 파라미터로 넘김(UserResource.java)
     // MANAGEMENT 46. 응답을 result에 할당
     const result = await axios.put<IUser>(adminUrl, user);
+    // MANAGEMENT 47. getUserAsAdmin 액션을 호출하여 모든 유저 조회
     thunkAPI.dispatch(getUsersAsAdmin({}));
+    // MANAGEMENT 48. 응답 리턴
     return result;
   },
   { serializeError: serializeAxiosError }
@@ -98,6 +100,7 @@ export const deleteUser = createAsyncThunk(
 
 export type UserManagementState = Readonly<typeof initialState>;
 
+// MANAGEMENT 54. user 정보 및 항목 수 등 index.ts에 의해 실행되어 state 관리됨
 export const UserManagementSlice = createSlice({
   name: 'userManagement',
   initialState: initialState as UserManagementState,
