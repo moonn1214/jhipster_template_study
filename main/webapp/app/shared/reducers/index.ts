@@ -15,7 +15,7 @@ import entitiesReducers from 'app/entities/reducers';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 // LOGIN 45. 여기에서 authentication 액션이 실행되는 듯
-// REGISTER 70. register 액션 실행 예상
+// REGISTER 70. register 액션 실행 예상 -> (수정)이게 아니라 여기는 리듀서를 사용하기 위해 가져오는 곳이고 아래는 액션명이 아님
 // SETTINGS 27. settings 액션 실행 예상
 // PASSWORD 29. password 액션 실행
 // MANAGEMENT 53. userManagement 액션 실행
