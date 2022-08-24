@@ -129,6 +129,7 @@ public class MailService {
     @Async
     public void sendPasswordResetMail(User user) {
         log.debug("Sending password reset email to '{}'", user.getEmail());
+        // REQUEST 17. 파라미터들을 넘겨주며 해당 메소드 실행, 메일을 보냄(resetkey를 포함하여 보냄)
         sendEmailFromTemplate(user, "mail/passwordResetEmail", "email.reset.title");
     }
 }

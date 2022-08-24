@@ -83,9 +83,14 @@ public class UserService {
 
     public Optional<User> requestPasswordReset(String mail) {
         return userRepository
+            // REQUEST 12. 넘어온 파라미터로 UserRepository의 메소드 실행 => 넘어온 이메일로 userRepository에서 로그인 정보를 찾음
             .findOneByEmailIgnoreCase(mail)
+            // REQUEST 13. 찾아온 유저 객체의 활성 상태로 필터 처리함
             .filter(User::isActivated)
+            // REQUEST 14. true이면 다음을 실행
+            // 위에서 받은 객체를 파라미터로 실행
             .map(user -> {
+                // REQUEST 15. 유저의 resetKey를 난수로 생성한 resetKey로 설정, 수정일을 현재시간으로 설정, 캐시 삭제 후 유저 객체를 리턴
                 user.setResetKey(RandomUtil.generateResetKey());
                 user.setResetDate(Instant.now());
                 this.clearUserCaches(user);

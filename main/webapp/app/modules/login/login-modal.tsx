@@ -87,6 +87,7 @@ const LoginModal = (props: ILoginModalProps) => {
           </Row>
           <div className="mt-1">&nbsp;</div>
           <Alert color="warning">
+            {/* REQUEST 1. 비밀번호 변경 PasswordResetInit 컴포넌트 호출(routes.tsx에 의해) */}
             <Link to="/account/reset/request" data-cy="forgetYourPasswordSelector">
               비밀번호를 잊으셨나요?
             </Link>

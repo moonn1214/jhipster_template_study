@@ -15,10 +15,15 @@ export type PasswordResetState = Readonly<typeof initialState>;
 const apiUrl = 'api/account/reset-password';
 // Actions
 
+// REQUEST 8. createAsyncThunk로 액션을 생성했기 때문에, 해당 액션에 대해 pending, fulfilled, rejected 상태에 대한 액션이 자동 생성됨
 export const handlePasswordResetInit = createAsyncThunk(
+  // 액션명
   'passwordReset/reset_password_init',
   // If the content-type isn't set that way, axios will try to encode the body and thus modify the data sent to the server.
+  // REQUEST 9. 파라미터로 넘어온 값을 mail로 받아서 함수 실행
+  // axios http 비동기 통신, post 방식의 요청을 보냄, 요청 파라미터는 요청url, mail, headers
   async (mail: string) => axios.post(`${apiUrl}/init`, mail, { headers: { ['Content-Type']: 'text/plain' } }),
+  // 에러 처리 reducer.utils.ts의 serializeAxiosError를 사용
   { serializeError: serializeAxiosError }
 );
 
@@ -36,6 +41,7 @@ export const PasswordResetSlice = createSlice({
       return initialState;
     },
   },
+  // REQUEST 18 END. handlePasswordResetInit 액션의 실행 상태에 따라 상태 변경
   extraReducers(builder) {
     builder
       .addCase(handlePasswordResetInit.fulfilled, () => ({

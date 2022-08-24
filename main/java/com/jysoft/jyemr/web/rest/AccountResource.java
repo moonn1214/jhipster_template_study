@@ -180,9 +180,13 @@ public class AccountResource {
      *
      * @param mail the mail of the user.
      */
+    // REQUEST 10. 요청으로 넘어온 파라미터 mail은 RequestBody에 의해 자바 객체로 변환하여 메소드에서 사용
     @PostMapping(path = "/account/reset-password/init")
     public void requestPasswordReset(@RequestBody String mail) {
+        // REQUEST 11. mail을 파라미터로 UserService의 requestPasswordReset 메소드를 실행
+        // 반환 받은 유저 객체를 user 객체에 할당
         Optional<User> user = userService.requestPasswordReset(mail);
+        // REQUEST 16. user 객체가 null이 아니면 sendPasswordResetMail 메소드 실행, 파라미터로 유저 객체
         if (user.isPresent()) {
             mailService.sendPasswordResetMail(user.get());
         } else {
